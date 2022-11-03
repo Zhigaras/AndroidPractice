@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">MyFirstApplication</string>
+    <string name="minusButton">-</string>
+    <string name="plusButton">+</string>
+    <string name="resetButton">Reset</string>
+    <string name="countField">Count</string>
+    <string name="all_seats_are_free">All seats are free.</string>
+    <string name="too_much_passengers">Too much passengers!</string>
+    <string name="free_seats_left">Free seats left: %d</string>
+</resources>
