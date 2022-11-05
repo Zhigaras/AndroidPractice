@@ -7,4 +7,5 @@
     <string name="all_seats_are_free">All seats are free.</string>
     <string name="too_much_passengers">Too much passengers!</string>
     <string name="free_seats_left">Free seats left: %d</string>
+    <string name="error">Error. Please press "reset" button.</string>
 </resources>
