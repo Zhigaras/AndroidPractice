@@ -4,7 +4,6 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.FrameLayout
-import android.widget.TextView
 import edu.skillbox.m2.databinding.CustomViewBinding
 
 class CustomView
@@ -14,14 +13,18 @@ class CustomView
     defStyleAttr: Int = 0
 ): FrameLayout(context, attrs, defStyleAttr) {
 
-    val binding = CustomViewBinding.inflate(LayoutInflater.from(context))
+    private val binding = CustomViewBinding.inflate(LayoutInflater.from(context))
 
     init {
         addView(binding.root)
     }
 
-    fun setText(string: TextView, text: String) {
-        string.text = text
+    fun setUpperStringText(text: String) {
+        binding.upperString.text = text
+    }
+
+    fun setLowerStringText(text: String) {
+        binding.lowerString.text = text
     }
 
 }

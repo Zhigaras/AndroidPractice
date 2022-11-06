@@ -1,7 +1,7 @@
 package edu.skillbox.m2
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import edu.skillbox.m2.databinding.ActivityMainBinding
 
 
@@ -12,8 +12,7 @@ class MainActivity : AppCompatActivity() {
         val binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.customView.setText(binding.customView.binding.upperString, "Upper string set up from Main code.")
-        binding.customView.setText(binding.customView.binding.lowerString, "Lower string set up from Main code.")
-
+        binding.customView.setUpperStringText("Upper string set up from main code.")
+        binding.customView.setLowerStringText("Lower string set up from main code.")
     }
 }
