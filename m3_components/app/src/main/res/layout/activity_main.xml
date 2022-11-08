@@ -59,7 +59,7 @@
         tools:ignore="SpeakableTextPresentCheck" />
 
     <Button
-        android:id="@+id/start_button"
+        android:id="@+id/start_stop_button"
         style="@style/MyButton"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
@@ -67,20 +67,6 @@
         android:text="@string/start"
         android:textAppearance="@style/MyTextStyle.Medium"
         android:visibility="visible"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/slider" />
-
-    <Button
-        android:id="@+id/stop_button"
-        style="@style/MyButton"
-        android:layout_width="200dp"
-        android:layout_height="wrap_content"
-        android:paddingHorizontal="50dp"
-        android:text="@string/stop"
-        android:textAppearance="@style/MyTextStyle.Medium"
-        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
