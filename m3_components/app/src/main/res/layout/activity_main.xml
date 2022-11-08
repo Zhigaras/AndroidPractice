@@ -44,18 +44,19 @@
 
     <com.google.android.material.slider.Slider
         android:id="@+id/slider"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="320dp"
+        android:layout_height="48dp"
         android:layout_margin="16dp"
         android:stepSize="10"
         android:value="@string/initial_counter_value"
         android:valueFrom="@string/initial_counter_value"
         android:valueTo="60"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/progressBar"
         app:layout_constraintVertical_bias="0.304"
-        tools:ignore="SpeakableTextPresentCheck"
-        tools:layout_editor_absoluteX="16dp" />
+        tools:ignore="SpeakableTextPresentCheck" />
 
     <Button
         android:id="@+id/start_button"

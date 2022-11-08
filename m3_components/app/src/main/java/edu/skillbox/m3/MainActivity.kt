@@ -1,11 +1,10 @@
 package edu.skillbox.m3
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
-import android.widget.Toast.LENGTH_LONG
 import android.widget.Toast.LENGTH_SHORT
+import androidx.appcompat.app.AppCompatActivity
 import edu.skillbox.m3.databinding.ActivityMainBinding
 import kotlinx.coroutines.*
 
@@ -40,7 +39,7 @@ class MainActivity : AppCompatActivity() {
                 binding.startButton.visibility = View.INVISIBLE
                 binding.stopButton.visibility = View.VISIBLE
                 binding.slider.isEnabled = false
-                val scope = CoroutineScope(Dispatchers.Default)
+                val scope = CoroutineScope(Dispatchers.Main)
                 val job = scope.launch {
                     while (counter > 0) {
                         delay(1000)
@@ -49,7 +48,7 @@ class MainActivity : AppCompatActivity() {
                         binding.progressBar.progress--
                         binding.counter.text = counter.toString()
                     }
-//                    showToast("Finished")
+                    showToast("Finished")
                     cancel()
                     useState(UIState.Waiting)
                 }
@@ -68,7 +67,6 @@ class MainActivity : AppCompatActivity() {
         }
 
     }
-
 
     private fun showToast(msg: String) {
         Toast.makeText(applicationContext, msg, LENGTH_SHORT).show()
