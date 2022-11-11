@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">m4</string>
+    <string name="song_name">Song Name</string>
+    <string name="singer_name">Singer Name</string>
+</resources>
