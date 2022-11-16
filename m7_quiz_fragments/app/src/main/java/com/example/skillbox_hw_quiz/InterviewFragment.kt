@@ -1,16 +1,14 @@
 package com.example.skillbox_hw_quiz
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.LinearLayout
-import android.widget.RadioButton
-import android.widget.RadioGroup
-import android.widget.TextView
-import androidx.core.content.ContextCompat
+import android.widget.*
+import android.widget.Toast.LENGTH_SHORT
+import androidx.core.view.forEach
 import androidx.core.view.setPadding
+import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.skillbox_hw_quiz.databinding.FragmentInterviewBinding
 import com.example.skillbox_hw_quiz.quiz.QuizStorage
@@ -21,9 +19,6 @@ import com.example.skillbox_hw_quiz.quiz.QuizStorage
 class InterviewFragment : Fragment() {
 
     private var _binding: FragmentInterviewBinding? = null
-
-    // This property is only valid between onCreateView and
-    // onDestroyView.
     private val binding get() = _binding!!
 
     override fun onCreateView(
@@ -33,47 +28,53 @@ class InterviewFragment : Fragment() {
 
         _binding = FragmentInterviewBinding.inflate(inflater, container, false)
         return binding.root
-
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         val mainLayout: LinearLayout = binding.questionsArea
+        val quiz = QuizStorage.getQuiz(QuizStorage.Locale.Ru)
+        val answers = mutableListOf<Int>()
+        val bundle = Bundle()
 
-        QuizStorage.getQuiz(QuizStorage.Locale.Ru).questions.forEach { question ->
+        quiz.questions.forEach { question ->
             val textView = TextView(context)
             textView.text = question.question
+            textView.setTextAppearance(R.style.Interview_text_style)
+            textView.setPadding(40)
+
             val radioGroup = RadioGroup(context)
-            question.answers.forEach { answer ->
+            radioGroup.addView(textView)
+            question.answers.forEachIndexed { index, answer ->
                 val radioButton = RadioButton(context)
+                radioButton.id = index
                 radioButton.text = answer
                 radioButton.setTextAppearance(R.style.Radio_group_style)
                 radioGroup.addView(radioButton)
             }
-            // setTextAppearance применяет не все параметры, не могу разобраться почему
-            // в данном случае из стиля Interview_text_style применятся только textSize
-            textView.setTextAppearance(R.style.Interview_text_style)
-
-            // применяю padding вручную
-            textView.setPadding(40)
-
-            // цвет тоже вручную. Нашел только такой способ:
-            textView.setTextColor(ContextCompat.getColor(requireContext(), R.color.black))
-
-            mainLayout.addView(textView, ViewGroup.LayoutParams.MATCH_PARENT)
             mainLayout.addView(radioGroup, ViewGroup.LayoutParams.MATCH_PARENT)
         }
-
 
         binding.backButton.setOnClickListener {
             findNavController().navigate(R.id.action_InterviewFragment_to_FirstFragment)
         }
 
         binding.submitButton.setOnClickListener {
-            findNavController().navigate(R.id.action_InterviewFragment_to_ResultFragment)
-
-            onDestroyView()
+            answers.clear()
+            mainLayout.forEach {
+                it as RadioGroup;
+                answers.add(it.checkedRadioButtonId)
+            }
+            try {
+                bundle.putString("param1", QuizStorage.answer(quiz, answers))
+                findNavController().navigate(
+                    R.id.action_InterviewFragment_to_ResultFragment,
+                    bundle
+                )
+            } catch (_: ArrayIndexOutOfBoundsException) {
+                showToast("Please answer all questions.")
+            }
         }
     }
 
@@ -81,4 +82,10 @@ class InterviewFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
+
+    private fun showToast(msg: String) {
+        val toast = Toast.makeText(context, msg, LENGTH_SHORT)
+        toast.show()
+    }
+
 }

@@ -14,15 +14,12 @@ import com.example.skillbox_hw_quiz.databinding.FragmentResultBinding
 class ResultFragment : Fragment() {
 
     private var _binding: FragmentResultBinding? = null
-
-    // This property is only valid between onCreateView and
-    // onDestroyView.
     private val binding get() = _binding!!
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
 
         _binding = FragmentResultBinding.inflate(inflater, container, false)
         return binding.root
@@ -32,7 +29,9 @@ class ResultFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.buttonThird.setOnClickListener {
+        binding.resultTextview.text = arguments?.getString("param1")
+
+        binding.startAgainButton.setOnClickListener {
             findNavController().navigate(R.id.action_ResultFragment_to_InterviewFragment)
         }
     }

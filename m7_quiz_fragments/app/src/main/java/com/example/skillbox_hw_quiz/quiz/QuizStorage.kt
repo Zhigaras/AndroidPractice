@@ -9,7 +9,7 @@ object QuizStorage {
     fun answer(quiz: Quiz, answers: List<Int>): String = quiz
         .questions
         .zip(answers) { question, index -> question.feedback[index] }
-        .joinToString(separator = " ")
+        .joinToString(separator = "\n\n")
 
     enum class Locale {
         Ru, En

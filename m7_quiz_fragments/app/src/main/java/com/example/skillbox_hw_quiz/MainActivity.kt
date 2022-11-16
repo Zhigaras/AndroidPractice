@@ -1,15 +1,12 @@
 package com.example.skillbox_hw_quiz
 
 import android.os.Bundle
-import com.google.android.material.snackbar.Snackbar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
-import androidx.navigation.ui.setupActionBarWithNavController
 import com.example.skillbox_hw_quiz.databinding.ActivityMainBinding
-import com.example.skillbox_hw_quiz.quiz.QuizStorage
 
 class MainActivity : AppCompatActivity() {
 
