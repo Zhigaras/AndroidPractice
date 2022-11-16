@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/FirstFragment">
+
+    <fragment
+        android:id="@+id/FirstFragment"
+        android:name="com.example.skillbox_hw_quiz.FirstFragment"
+        android:label="@string/first_fragment_label"
+        tools:layout="@layout/fragment_first">
+
+        <action
+            android:id="@+id/action_FirstFragment_to_InterviewFragment"
+            app:destination="@id/InterviewFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/InterviewFragment"
+        android:name="com.example.skillbox_hw_quiz.InterviewFragment"
+        android:label="@string/interview_fragment_label"
+        tools:layout="@layout/fragment_interview">
+
+        <action
+            android:id="@+id/action_InterviewFragment_to_FirstFragment"
+            app:destination="@id/FirstFragment" />
+        <action
+            android:id="@+id/action_InterviewFragment_to_ResultFragment"
+            app:destination="@id/ResultFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/ResultFragment"
+        android:name="com.example.skillbox_hw_quiz.ResultFragment"
+        android:label="@string/result_fragment_label"
+        tools:layout="@layout/fragment_result">
+
+        <action
+            android:id="@+id/action_ResultFragment_to_InterviewFragment"
+            app:destination="@id/InterviewFragment" />
+    </fragment>
+</navigation>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Interview_text_style">
+        <item name="fontFamily">@font/opensans_bold</item>
+        <item name="color">@color/black</item>
+        <item name="android:textSize">22sp</item>
+        <item name="android:paddingBottom">48dp</item>
+    </style>
+
+    <style name="Radio_group_style">
+        <item name="android:padding">8dp</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+</resources>
