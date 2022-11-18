@@ -1,12 +1,9 @@
 package com.example.skillbox_hw_quiz
 
-import android.animation.ObjectAnimator
-import android.animation.PropertyValuesHolder
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.*
 import android.widget.Toast.LENGTH_SHORT
 import androidx.core.view.forEach
@@ -40,8 +37,6 @@ class InterviewFragment : Fragment() {
         val quiz = QuizStorage.getQuiz(QuizStorage.Locale.Ru)
         val answers = mutableListOf<Int>()
         val bundle = Bundle()
-        val quizMoveAnim = PropertyValuesHolder.ofFloat(View.Y, 1000f, 0f)
-        val quizAlphaAnim = PropertyValuesHolder.ofFloat(View.ALPHA, 0f, 1f)
 
         quiz.questions.forEach { question ->
             val textView = TextView(context)
@@ -60,15 +55,12 @@ class InterviewFragment : Fragment() {
             }
 
             mainLayout.addView(radioGroup, ViewGroup.LayoutParams.MATCH_PARENT)
-//            ObjectAnimator.ofPropertyValuesHolder(
-//                radioGroup,
-//                quizMoveAnim,
-//                quizAlphaAnim
-//            ).apply {
-//                duration = 3000
-//                interpolator = AccelerateDecelerateInterpolator()
-//                start()
-//            }
+
+            radioGroup.alpha = 0f
+            radioGroup.animate().apply {
+                alpha(1f)
+                duration = 1000
+            }.start()
         }
 
         binding.backButton.setOnClickListener {
