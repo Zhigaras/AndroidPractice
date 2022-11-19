@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.skillbox_hw_quiz.databinding.FragmentInterviewBinding
 import com.example.skillbox_hw_quiz.quiz.QuizStorage
+import java.util.*
 
 /**
  * A simple [Fragment] subclass as the second destination in the navigation.
@@ -80,7 +81,10 @@ class InterviewFragment : Fragment() {
                     bundle
                 )
             } catch (_: ArrayIndexOutOfBoundsException) {
-                showToast("Please answer all questions.")
+                showToast(when (Locale.getDefault().language) {
+                    "ru" -> "Пожалуйста, ответьте на все вопросы."
+                    else -> "Please answer all questions."
+                })
             }
         }
     }
