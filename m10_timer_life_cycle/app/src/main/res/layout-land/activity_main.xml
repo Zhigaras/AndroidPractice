@@ -36,7 +36,6 @@
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:gravity="center"
-        android:text="@string/initial_counter_value"
         android:textAppearance="@style/MyTextStyle.Large"
         app:layout_constraintBottom_toBottomOf="@+id/progressBar"
         app:layout_constraintEnd_toEndOf="@+id/progressBar"
