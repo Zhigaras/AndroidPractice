@@ -12,9 +12,7 @@ import kotlinx.coroutines.*
 import kotlin.math.roundToInt
 
 private const val KEY_COUNTER = "counter"
-private const val KEY_PB_PROGRESS = "progressBarProgress"
 private const val KEY_PB_MAX = "progressBarMax"
-private const val KEY_CURRENT_STATE = "currentState"
 private const val KEY_IS_RUNNING = "isRunning"
 
 class MainActivity : AppCompatActivity() {
@@ -24,41 +22,30 @@ class MainActivity : AppCompatActivity() {
     private var counter = 10.0f
     private var isRunning = false
     private val sliderAvailability get() = !isRunning
-    private var currentState: UIStates = UIStates.Waiting
     private val scope = CoroutineScope(Dispatchers.Main)
     private var job = scope.coroutineContext.job
 
-
-    private fun refreshPbAndCounter(value: Float) {
-        counter = value
-        binding.progressBar.max = (value * 10).toInt()
-        binding.counter.text = value.roundToInt().toString()
-        binding.progressBar.progress = (value * 10).toInt()
-    }
-
-    private fun changeButtonTo(UIState: UIStates) = when (UIState) {
-        is UIStates.Waiting -> {
-            binding.startButton.visibility = View.VISIBLE
-            binding.stopButton.visibility = View.INVISIBLE
+    private fun refreshPbAndCounter(value: Float) = value.let {
+            counter = it
+            binding.progressBar.max = (it * 10).toInt()
+            binding.progressBar.progress = (it * 10).toInt()
+            binding.counter.text = it.roundToInt().toString()
         }
-        is UIStates.Progress -> {
-            binding.startButton.visibility = View.INVISIBLE
-            binding.stopButton.visibility = View.VISIBLE
-        }
-    }
 
-    private fun changeUIStateTo(UIState: UIStates): Unit {
+    private fun changeUIStateWith(isRunning: Boolean): Unit {
         binding.slider.isEnabled = sliderAvailability
-        changeButtonTo(UIState)
-        currentState = UIState
-        when (UIState) {
-            is UIStates.Waiting -> {
+        when (isRunning) {
+            false -> {
+                binding.startButton.visibility = View.VISIBLE
+                binding.stopButton.visibility = View.INVISIBLE
                 refreshPbAndCounter(binding.slider.value)
                 binding.slider.addOnChangeListener { _, value, _ ->
                     refreshPbAndCounter(value)
                 }
             }
-            is UIStates.Progress -> {
+            true -> {
+                binding.startButton.visibility = View.INVISIBLE
+                binding.stopButton.visibility = View.VISIBLE
                 binding.counter.text = counter.roundToInt().toString()
                 binding.progressBar.progress = (counter * 10).toInt()
             }
@@ -80,7 +67,7 @@ class MainActivity : AppCompatActivity() {
             cancel()
             isRunning = false
             showToast("Finished")
-            changeUIStateTo(UIStates.Waiting)
+            changeUIStateWith(isRunning)
         }
     }
 
@@ -91,26 +78,24 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
         savedInstanceState?.let {
             counter = it.getFloat(KEY_COUNTER)
-            binding.progressBar.progress = it.getInt(KEY_PB_PROGRESS)
             binding.progressBar.max = it.getInt(KEY_PB_MAX)
             isRunning = it.getBoolean(KEY_IS_RUNNING)
-            currentState = it.getSerializable(KEY_CURRENT_STATE) as UIStates
         }
 
-        changeUIStateTo(currentState)
+        changeUIStateWith(isRunning)
 
         if (isRunning) startCount()
 
         binding.startButton.setOnClickListener {
             startCount()
-            changeUIStateTo(UIStates.Progress)
+            changeUIStateWith(isRunning)
         }
 
         binding.stopButton.setOnClickListener {
             job.cancel()
             isRunning = false
             showToast("Stopped")
-            changeUIStateTo(UIStates.Waiting)
+            changeUIStateWith(isRunning)
         }
     }
 
@@ -119,10 +104,8 @@ class MainActivity : AppCompatActivity() {
         Log.d(TAG, "${this::class.java.simpleName} onSaveInstanceState")
         outState.apply {
             putFloat(KEY_COUNTER, counter)
-            putInt(KEY_PB_PROGRESS, binding.progressBar.progress)
             putInt(KEY_PB_MAX, binding.progressBar.max)
             putBoolean(KEY_IS_RUNNING, isRunning)
-            putSerializable(KEY_CURRENT_STATE, currentState)
         }
         job.cancel()
     }
