@@ -1,7 +1,9 @@
 package edu.skillbox.m3
 
+import android.content.ContentValues.TAG
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.view.Gravity
 import android.widget.Toast
 import android.widget.Toast.LENGTH_SHORT
@@ -58,6 +60,7 @@ class MainActivity : AppCompatActivity() {
                         delay(1000)
                         yield()
                         counter--
+                        Log.d(TAG, "counter = $counter")
                         binding.progressBar.progress--
                         binding.counter.text = counter.toString()
                     }
@@ -76,8 +79,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun showToast(msg: String) {
-        val toast = Toast.makeText(applicationContext,msg, LENGTH_SHORT)
-            toast.setGravity(Gravity.TOP, 0, 10)
-            toast.show()
+        Toast.makeText(applicationContext,msg, LENGTH_SHORT).show()
     }
 }
