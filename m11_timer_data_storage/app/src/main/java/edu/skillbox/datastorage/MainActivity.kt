@@ -17,16 +17,18 @@ class MainActivity : AppCompatActivity() {
         val textInput = findViewById<TextInputEditText>(R.id.input_text)
         val textOutput = findViewById<TextView>(R.id.output_text)
 
-        textOutput.text = repository.getText()
+        fun updateTextOutput() { textOutput.text = repository.getText() }
+
+        updateTextOutput()
 
         saveButton.setOnClickListener {
             repository.saveText(textInput.text.toString())
-            textOutput.text = repository.getText()
+            updateTextOutput()
         }
 
         clearButton.setOnClickListener {
             repository.clearText()
-            textOutput.text = repository.getText()
+            updateTextOutput()
         }
     }
 }
