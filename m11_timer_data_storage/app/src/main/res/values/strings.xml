@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">DataStorage</string>
+    <string name="save">Save</string>
+    <string name="clear">clear</string>
+</resources>
