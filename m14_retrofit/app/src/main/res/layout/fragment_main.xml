@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="16dp"
+    android:orientation="vertical"
+    tools:context=".ui.main.MainFragment">
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/avatar_image"
+            android:layout_width="128dp"
+            android:layout_height="128dp"
+            android:layout_marginEnd="16dp"
+            android:contentDescription="@string/avatar_image"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/gender"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="25"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:textAppearance="@style/headText"
+                tools:text="@tools:sample/lorem/random" />
+
+            <TextView
+                android:id="@+id/name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="50"
+                android:ellipsize="start"
+                android:maxLines="2"
+                android:textAppearance="@style/headText"
+                tools:text="@tools:sample/lorem/random" />
+
+            <TextView
+                android:id="@+id/Dob"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="25"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:textAppearance="@style/headText"
+                tools:text="@tools:sample/lorem/random" />
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <TextView
+        android:id="@+id/city"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:ellipsize="end"
+        android:maxLines="2"
+        android:textAppearance="@style/bodyText"
+        tools:text="@tools:sample/lorem/random" />
+
+    <TextView
+        android:id="@+id/street"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:textAppearance="@style/bodyText"
+        tools:text="@tools:sample/lorem/random" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <Button
+            android:id="@+id/refresh_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/refresh"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+        <ProgressBar
+            android:id="@+id/progress_bar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/refresh_button"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.appcompat.widget.LinearLayoutCompat>
