@@ -1,10 +1,11 @@
 package edu.skillbox.m14retrofit.ui.main
 
+import com.google.gson.annotations.SerializedName
+
 data class UserModel(
     val info: Info,
-    val results: List<Results>
+    @SerializedName("results") val user: List<User>
 )
-
 
 data class Info(
     val page: Int,
@@ -13,7 +14,7 @@ data class Info(
     val version: String
 )
 
-data class Results(
+data class User(
     val gender: String,
     val name: Name,
     val location: Location,

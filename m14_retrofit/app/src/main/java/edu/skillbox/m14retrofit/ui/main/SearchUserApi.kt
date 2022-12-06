@@ -1,6 +1,5 @@
 package edu.skillbox.m14retrofit.ui.main
 
-import android.util.Log
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -8,7 +7,6 @@ import retrofit2.http.GET
 import retrofit2.http.Query
 
 private const val BASE_URL = "https://randomuser.me"
-private const val TAG = "RetrofitInstance"
 
 object RetrofitInstance {
 
