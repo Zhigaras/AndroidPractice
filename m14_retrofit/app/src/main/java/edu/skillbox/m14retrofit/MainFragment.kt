@@ -1,4 +1,4 @@
-package edu.skillbox.m14retrofit.ui.main
+package edu.skillbox.m14retrofit
 
 import android.annotation.SuppressLint
 import android.os.Bundle

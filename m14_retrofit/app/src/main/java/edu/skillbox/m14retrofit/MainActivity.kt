@@ -2,7 +2,6 @@ package edu.skillbox.m14retrofit
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import edu.skillbox.m14retrofit.ui.main.MainFragment
 
 class MainActivity : AppCompatActivity() {
 

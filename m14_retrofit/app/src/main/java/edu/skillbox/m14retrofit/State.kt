@@ -1,4 +1,4 @@
-package edu.skillbox.m14retrofit.ui.main
+package edu.skillbox.m14retrofit
 
 sealed class State {
     object Progress : State()

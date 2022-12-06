@@ -1,4 +1,4 @@
-package edu.skillbox.m14retrofit.ui.main
+package edu.skillbox.m14retrofit
 
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
