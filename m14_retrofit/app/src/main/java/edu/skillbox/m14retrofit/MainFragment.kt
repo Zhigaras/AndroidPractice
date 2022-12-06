@@ -12,6 +12,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import edu.skillbox.m14retrofit.databinding.FragmentMainBinding
+import kotlinx.coroutines.flow.collect
 
 private const val TAG = "MainFragment"
 
@@ -40,9 +41,13 @@ class MainFragment : Fragment() {
             viewModel.fetchUser()
         }
 
-        viewModel.user.observe(viewLifecycleOwner) { user ->
-            refreshUserCard(user)
-        }
+        viewLifecycleOwner.lifecycleScope
+            .launchWhenStarted {
+                viewModel.userFlow
+                    .collect {
+                        it?.let { refreshUserCard(it) }
+                    }
+            }
 
         viewLifecycleOwner.lifecycleScope
             .launchWhenStarted {

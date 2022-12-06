@@ -20,9 +20,8 @@ class MainViewModel : ViewModel() {
     private val _error = Channel<String>()
     val errorChannel = _error.receiveAsFlow()
 
-    val user: MutableLiveData<User> by lazy {
-        MutableLiveData<User>()
-    }
+    private var _userFlow = MutableStateFlow<User?>(null)
+    val userFlow = _userFlow.asStateFlow()
 
     init {
         Log.d(TAG, "init")
@@ -35,7 +34,7 @@ class MainViewModel : ViewModel() {
             val response = RetrofitInstance.searchUserApi.getUser()
             if (response.isSuccessful) {
                 try {
-                    user.value = response.body()!!.user.first()
+                    _userFlow.value = response.body()!!.user.first()
                     _state.value = State.Success()
                 } catch (e: Throwable) {
                     _state.value = State.Error()
