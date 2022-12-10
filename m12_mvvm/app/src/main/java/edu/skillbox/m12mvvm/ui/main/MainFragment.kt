@@ -17,7 +17,6 @@ class MainFragment : Fragment() {
     companion object {
         fun newInstance() = MainFragment()
     }
-
     private lateinit var binding: FragmentMainBinding
     private val viewModel: MainViewModel by viewModels()
     private val searchRequest: String get() = binding.searchBar.text.toString()
