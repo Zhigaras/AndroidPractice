@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/fragment_gallery">
+
+    <fragment
+        android:id="@+id/fragment_gallery"
+        android:name="edu.skillbox.m18_permissions.presentation.GalleryFragment"
+        android:label="GalleryFragment"
+        tools:layout="@layout/fragment_gallery">
+
+        <action
+            android:id="@+id/from_gallery_to_camera"
+            app:destination="@id/fragment_camera"/>
+    </fragment>
+    <fragment
+        android:id="@+id/fragment_camera"
+        android:name="edu.skillbox.m18_permissions.presentation.CameraFragment"
+        android:label="CameraFragment"
+        tools:layout="@layout/fragment_camera">
+
+        <action
+            android:id="@+id/from_camera_to_gallery"
+            app:destination="@id/fragment_gallery"/>
+    </fragment>
+
+</navigation>

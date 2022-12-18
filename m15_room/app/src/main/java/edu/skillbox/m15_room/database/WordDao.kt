@@ -17,8 +17,7 @@ interface WordDao {
 
     @Query("SELECT * FROM dictionary WHERE word LIKE :searchWord")
     suspend fun findWordCounter(searchWord: String): Word?
-
-
+    
     @Query("DELETE FROM dictionary")
     suspend fun clear()
 }
