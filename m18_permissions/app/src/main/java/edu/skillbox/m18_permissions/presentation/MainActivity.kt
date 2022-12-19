@@ -11,7 +11,6 @@ import dagger.hilt.android.AndroidEntryPoint
 import edu.skillbox.m18_permissions.R
 import edu.skillbox.m18_permissions.databinding.ActivityMainBinding
 
-@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
     
     private lateinit var appBarConfiguration: AppBarConfiguration
