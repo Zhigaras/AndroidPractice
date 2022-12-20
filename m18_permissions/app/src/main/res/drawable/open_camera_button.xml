@@ -6,7 +6,7 @@
                 android:height="60dp"
                 android:width="60dp"/>
             <stroke
-                android:color="@color/grey"
+                android:color="@color/white"
                 android:width="2dp"/>
         </shape>
     </item>
@@ -14,7 +14,7 @@
         <vector
             android:width="40dp"
             android:height="40dp"
-            android:tint="@color/grey"
+            android:tint="@color/white"
             android:viewportWidth="24"
             android:viewportHeight="24">
             <path

@@ -13,7 +13,16 @@
 
         <action
             android:id="@+id/from_gallery_to_camera"
-            app:destination="@id/fragment_camera"/>
+            app:destination="@id/fragment_camera"
+            app:enterAnim="@anim/enter_from_right_animation"
+            app:exitAnim="@anim/exit_to_left_animation"
+            app:popEnterAnim="@anim/enter_from_left_animation"
+            app:popExitAnim="@anim/exit_to_right_animation"
+            app:popUpTo="@id/fragment_gallery" />
+        <action
+            android:id="@+id/from_gallery_to_full_screen_photo"
+            app:destination="@id/full_screen_photo_fragment"/>
+
     </fragment>
     <fragment
         android:id="@+id/fragment_camera"
@@ -23,7 +32,24 @@
 
         <action
             android:id="@+id/from_camera_to_gallery"
-            app:destination="@id/fragment_gallery"/>
+            app:destination="@id/fragment_gallery"
+            app:enterAnim="@anim/enter_from_left_animation"
+            app:exitAnim="@anim/exit_to_right_animation"
+            app:popUpTo="@id/fragment_gallery"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/from_camera_to_full_screen_photo"
+            app:destination="@id/full_screen_photo_fragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/full_screen_photo_fragment"
+        android:name="edu.skillbox.m18_permissions.presentation.PhotoFragment"
+        android:label="fragment_photo"
+        tools:layout="@layout/fragment_photo">
+
+        <argument
+            android:name="photoData"
+            app:argType="edu.skillbox.m18_permissions.data.database.PhotoModel" />
     </fragment>
 
 </navigation>

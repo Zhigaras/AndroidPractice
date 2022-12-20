@@ -8,6 +8,7 @@ import edu.skillbox.m18_permissions.data.database.App
 import edu.skillbox.m18_permissions.data.database.PhotoDao
 import edu.skillbox.m18_permissions.data.database.PhotoModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch

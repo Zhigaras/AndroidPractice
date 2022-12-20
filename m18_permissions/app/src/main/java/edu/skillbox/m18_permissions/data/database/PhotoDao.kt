@@ -12,6 +12,9 @@ interface PhotoDao {
     @Insert
     suspend fun insertPhoto(photo: PhotoModel)
     
-    @Query("SELECT * FROM photos")
-    fun showAllPhotos(): List<PhotoModel>
+    @Query("SELECT * FROM photos ORDER BY id DESC")
+    suspend fun showAllPhotos(): List<PhotoModel>
+    
+    @Query("SELECT * FROM photos ORDER BY id DESC LIMIT 1")
+    suspend fun showLastPhoto(): PhotoModel
 }
