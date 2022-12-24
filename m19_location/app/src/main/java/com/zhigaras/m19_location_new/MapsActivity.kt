@@ -26,7 +26,7 @@ import com.zhigaras.m19_location_new.model.Feature
 import kotlinx.coroutines.launch
 
 private const val CAMERA_POSITION = "camera_position"
-private const val KEY_DEBUG = "My_debug"
+private const val TAG_DEBUG = "My_debug"
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     
@@ -100,12 +100,12 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         mapFragment.getMapAsync { googleMap ->
             mMap = googleMap
             checkPermissions()
-            addMarkersToMap(placeList)
             with(googleMap.uiSettings) {
                 isZoomControlsEnabled = true
                 isZoomGesturesEnabled = true
                 isScrollGesturesEnabledDuringRotateOrZoom = true
             }
+            addMarkersToMap(placeList)
             googleMap.setLocationSource(object : LocationSource {
                 override fun activate(p0: LocationSource.OnLocationChangedListener) {
                     locationListener = p0
@@ -122,28 +122,27 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                 savedInstanceState.getParcelable(CAMERA_POSITION, CameraPosition::class.java)
             } else {
                 @Suppress("DEPRECATION")
-                savedInstanceState.getParcelable<CameraPosition>(CAMERA_POSITION)
+                savedInstanceState.getParcelable(CAMERA_POSITION)
             }
             Log.d("OnCreate", cameraPosition.toString())
             cameraPosition?. let {
                 mMap?.moveCamera(CameraUpdateFactory.newCameraPosition(it))
             }
             needMoveCamera = false
-            addMarkersToMap(placeList)
         }
         fusedClient = LocationServices.getFusedLocationProviderClient(this)
         
         binding.showSightsBtn.setOnClickListener {
-            Log.d(KEY_DEBUG, "Btn Click")
+            Log.d(TAG_DEBUG, "Btn Click")
             mMap?.clear()
             viewModel.getPlaces(currentLongitude, currentLatitude)
         }
         
         lifecycleScope.launch {
-            Log.d(KEY_DEBUG, "launch coroutine")
+            Log.d(TAG_DEBUG, "launch coroutine")
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.placesFlow.collect {
-                    Log.d(KEY_DEBUG, "collect")
+                    Log.d(TAG_DEBUG, "collect")
                     placeList = it
                     addMarkersToMap(it)
                 }
@@ -169,7 +168,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putParcelable(CAMERA_POSITION, mMap?.cameraPosition)
-        Log.d("onSaveInstanceState", mMap?.cameraPosition.toString())
     }
     
     /**
@@ -190,7 +188,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     }
     
     private fun addMarkersToMap(placeList: List<Feature>) {
-        Log.d(KEY_DEBUG, "adding places")
+        Log.d(TAG_DEBUG, "adding places")
         placeList.forEach {
             val snippet = buildString {
                 append(it.properties.country)
