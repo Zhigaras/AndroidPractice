@@ -1,7 +1,6 @@
-package edu.skillbox.m17_recyclerview.data
+package com.zhigaras.m19_location_new
 
-
-import edu.skillbox.m17_recyclerview.entity.MarsRoversPhotosList
+import com.zhigaras.m19_location_new.model.ApiResponse
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -9,21 +8,21 @@ import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.Headers
 import retrofit2.http.Query
-import javax.inject.Inject
 
-private const val API_KEY = "17QbFxXVegzv03aP9CuAZBM8IbjexdliiMUwr2p6"
-private const val BASE_URL = "https://api.nasa.gov/"
+private const val API_KEY = "a873a4b256d94b6a814d369585c4ec3b"
+private const val BASE_URL = "https://api.geoapify.com/v2/"
 
-interface NasaMarsRoverApi {
-
+interface PlacesInterface {
+    
     @Headers("X-API-KEY: $API_KEY")
-    @GET("mars-photos/api/v1/rovers/curiosity/photos")
-    suspend fun findRoverPhotos(
-        @Query("sol") sol: Int
-    ): MarsRoversPhotosList
+    @GET("places?categories=tourism.sights")
+    suspend fun findPlaces(
+        @Query("bias") lonLat: String //bias=proximity:51.367013,51.233385
+    ): ApiResponse
 }
 
-class RemoteRepository @Inject constructor(){
+class RemoteRepository {
+    
     private val retrofit = Retrofit
         .Builder()
         .client(
@@ -34,6 +33,7 @@ class RemoteRepository @Inject constructor(){
         .baseUrl(BASE_URL)
         .addConverterFactory(GsonConverterFactory.create())
         .build()
-
-    val nasaMarsRoverApi: NasaMarsRoverApi = retrofit.create(NasaMarsRoverApi::class.java)
+    
+    val placesApi: PlacesInterface = retrofit.create(PlacesInterface::class.java)
+    
 }
