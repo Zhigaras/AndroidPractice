@@ -41,20 +41,6 @@ class MapsViewModel: ViewModel() {
                 onFailure = { _errorChannel.send("Download error")}
             )
             _isLoading.value = false
-
-
-//            isLoading = true
-//            val response = remoteRepository.findPlaces("proximity:$lon,$lat")
-//            if (response.isSuccessful) {
-//                try {
-//                    response.body()?.let { _placesChannel.send(it.features) }
-//                } catch (e: Throwable) {
-//                    _errorChannel.send(e.message.toString())
-//                }
-//            } else {
-//                _errorChannel.send("Download error")
-//            }
-//            isLoading = false
         }
     }
 }

@@ -3,6 +3,7 @@ package com.zhigaras.m19_location_new
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.pm.PackageManager
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Looper
@@ -18,7 +19,6 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.google.android.gms.location.*
 import com.google.android.gms.maps.*
 import com.google.android.gms.maps.model.CameraPosition
-
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.zhigaras.m19_location_new.databinding.ActivityMapsBinding
@@ -26,10 +26,13 @@ import com.zhigaras.m19_location_new.model.Feature
 import kotlinx.coroutines.launch
 
 private const val CAMERA_POSITION = "camera_position"
+private const val KEY_DEBUG = "My_debug"
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     
     private var mMap: GoogleMap? = null
+    
+    private var placeList: List<Feature> = emptyList()
     
     private val viewModel: MapsViewModel by viewModels()
     
@@ -87,9 +90,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         
         val binding: ActivityMapsBinding =
             DataBindingUtil.setContentView(this, R.layout.activity_maps)
-
-//        binding = ActivityMapsBinding.inflate(layoutInflater)
-//        setContentView(binding.root)
         
         binding.viewModel = viewModel
         binding.lifecycleOwner = this
@@ -100,6 +100,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         mapFragment.getMapAsync { googleMap ->
             mMap = googleMap
             checkPermissions()
+            addMarkersToMap(placeList)
             with(googleMap.uiSettings) {
                 isZoomControlsEnabled = true
                 isZoomGesturesEnabled = true
@@ -117,21 +118,33 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         }
         
         if (savedInstanceState != null) {
-            val cameraPosition = savedInstanceState.getParcelable<CameraPosition>(CAMERA_POSITION)!!
+            val cameraPosition = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                savedInstanceState.getParcelable(CAMERA_POSITION, CameraPosition::class.java)
+            } else {
+                @Suppress("DEPRECATION")
+                savedInstanceState.getParcelable<CameraPosition>(CAMERA_POSITION)
+            }
             Log.d("OnCreate", cameraPosition.toString())
-            mMap?.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition))
+            cameraPosition?. let {
+                mMap?.moveCamera(CameraUpdateFactory.newCameraPosition(it))
+            }
             needMoveCamera = false
+            addMarkersToMap(placeList)
         }
         fusedClient = LocationServices.getFusedLocationProviderClient(this)
         
         binding.showSightsBtn.setOnClickListener {
-            Log.d("Debug", "Btn Click")
+            Log.d(KEY_DEBUG, "Btn Click")
+            mMap?.clear()
             viewModel.getPlaces(currentLongitude, currentLatitude)
         }
         
         lifecycleScope.launch {
+            Log.d(KEY_DEBUG, "launch coroutine")
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.placesFlow.collect {
+                    Log.d(KEY_DEBUG, "collect")
+                    placeList = it
                     addMarkersToMap(it)
                 }
             }
@@ -159,7 +172,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         Log.d("onSaveInstanceState", mMap?.cameraPosition.toString())
     }
     
-    
     /**
      * Manipulates the map once available.
      * This callback is triggered when the map is ready to be used.
@@ -171,17 +183,14 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
      */
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
-        Log.d("Debug", "onMapReady")
         
-        // Add a marker in Sydney and move the camera
-//        val sydney = LatLng(-34.0, 151.0)
-//        mMap?.addMarker(MarkerOptions().position(sydney).title("Marker in Sydney"))
-    
-    
+        //Add a marker in Sydney and move the camera
+        val sydney = LatLng(-34.0, 151.0)
+        mMap?.addMarker(MarkerOptions().position(sydney).title("Marker in Sydney"))
     }
     
     private fun addMarkersToMap(placeList: List<Feature>) {
-        Log.d("Debug", "adding places")
+        Log.d(KEY_DEBUG, "adding places")
         placeList.forEach {
             val snippet = buildString {
                 append(it.properties.country)
