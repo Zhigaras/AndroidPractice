@@ -6,6 +6,14 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
+    <Button
+        android:id="@+id/mybutton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="intent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <TextView
         android:id="@+id/text_view"
         android:layout_width="wrap_content"
@@ -64,8 +72,8 @@
         android:layout_height="wrap_content"
         android:paddingHorizontal="50dp"
         android:text="@string/start"
-        android:textColor="@color/green"
         android:textAppearance="@style/MyTextStyle.Medium"
+        android:textColor="@color/green"
         android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -79,8 +87,8 @@
         android:layout_height="wrap_content"
         android:paddingHorizontal="50dp"
         android:text="@string/stop"
-        android:textColor="@color/red"
         android:textAppearance="@style/MyTextStyle.Medium"
+        android:textColor="@color/red"
         android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

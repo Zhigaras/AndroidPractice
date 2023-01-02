@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "501001513104",
+    "project_id": "sights-18618",
+    "storage_bucket": "sights-18618.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:501001513104:android:337c4090fd8b26b7105015",
+        "android_client_info": {
+          "package_name": "com.zhigaras.m19_location_new"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "501001513104-0bnn8g229nrmjafekbdavbmilnhb6j8t.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAJP8O4TZ9mh-zbx5NH53GsffjCg1gLzxU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "501001513104-0bnn8g229nrmjafekbdavbmilnhb6j8t.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

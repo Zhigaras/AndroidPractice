@@ -8,9 +8,9 @@ import javax.inject.Inject
 
 class GetUsefulActivityUseCase @Inject constructor(
     private val usefulActivitiesRepository: UsefulActivitiesRepository
-    ) {
+) {
     suspend fun execute(): Response<UsefulActivityDto> {
         return usefulActivitiesRepository.getUsefulActivity()
-
+        
     }
 }

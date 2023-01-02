@@ -46,6 +46,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     
     private var placeList: List<Feature> = emptyList()
     
+    private lateinit var binding: ActivityMapsBinding
+    
     private val viewModel: MapsViewModel by viewModels()
     
     private lateinit var fusedClient: FusedLocationProviderClient
@@ -100,13 +102,33 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         
-        val binding: ActivityMapsBinding =
-            DataBindingUtil.setContentView(this, R.layout.activity_maps)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_maps)
         
         binding.viewModel = viewModel
         binding.lifecycleOwner = this
-        /** Obtain the SupportMapFragment and get notified when the map is ready to be used.*/
         
+        setUpMap()
+        movingCamera(savedInstanceState)
+        setUpPlacesFlow()
+        setUpErrorChannel()
+        setUpSearchBtnListener()
+
+        FirebaseMessaging.getInstance().token.addOnCompleteListener {
+            Log.d("registration token", it.result)
+        }
+    }
+    
+    override fun onStart() {
+        super.onStart()
+        checkPermissions()
+    }
+    
+    override fun onStop() {
+        super.onStop()
+        fusedClient.removeLocationUpdates(locationCallback)
+    }
+    
+    private fun setUpMap() {
         val mapFragment = supportFragmentManager
             .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync { googleMap ->
@@ -128,7 +150,9 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                 }
             })
         }
-        
+    }
+    
+    private fun movingCamera(savedInstanceState: Bundle?) {
         if (savedInstanceState != null) {
             val cameraPosition = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                 savedInstanceState.getParcelable(CAMERA_POSITION, CameraPosition::class.java)
@@ -136,40 +160,33 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                 @Suppress("DEPRECATION")
                 savedInstanceState.getParcelable(CAMERA_POSITION)
             }
-            Log.d("OnCreate", cameraPosition.toString())
             cameraPosition?.let {
                 mMap?.moveCamera(CameraUpdateFactory.newCameraPosition(it))
             }
             needMoveCamera = false
         }
         fusedClient = LocationServices.getFusedLocationProviderClient(this)
-        
-        FirebaseMessaging.getInstance().token.addOnCompleteListener {
-            Log.d("registration token", it.result)
-        }
-        
-        binding.showSightsBtn.setOnClickListener {
-            FirebaseCrashlytics.getInstance().log("This is additional info")
-            createNotification()
-            try {
-                throw Exception("my test exception")
-            } catch (e: Exception) {
-                FirebaseCrashlytics.getInstance().recordException(e)
-            }
-//            Log.d(TAG_DEBUG, "Btn Click")
-//            mMap?.clear()
-//            viewModel.getPlaces(currentLongitude, currentLatitude)
-        }
-        
+    }
+    
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putParcelable(CAMERA_POSITION, mMap?.cameraPosition)
+    }
+    
+    private fun setUpPlacesFlow() {
         lifecycleScope.launch {
-            Log.d(TAG_DEBUG, "launch coroutine")
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.placesFlow.collect {
-                    Log.d(TAG_DEBUG, "collect")
+                    if (it.isNotEmpty()) createNotification(it.size)
                     placeList = it
                     addMarkersToMap(it)
                 }
             }
+        }
+    }
+    
+    private fun setUpErrorChannel() {
+        lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.errorChannel.collect {
                     Toast.makeText(applicationContext, it, Toast.LENGTH_SHORT).show()
@@ -178,40 +195,25 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         }
     }
     
-    override fun onStart() {
-        super.onStart()
-        checkPermissions()
-    }
-    
-    override fun onStop() {
-        super.onStop()
-        fusedClient.removeLocationUpdates(locationCallback)
-    }
-    
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        outState.putParcelable(CAMERA_POSITION, mMap?.cameraPosition)
+    private fun setUpSearchBtnListener() {
+        binding.showSightsBtn.setOnClickListener {
+            mMap?.clear()
+            viewModel.getPlaces(currentLongitude, currentLatitude)
+        }
     }
     
     @SuppressLint("UnspecifiedImmutableFlag", "MissingPermission")
-    fun createNotification() {
-        val intent = Intent(applicationContext, MapsActivity::class.java)
+    fun createNotification(numberOfSights: Int) {
+        val notification =
+            NotificationCompat.Builder(applicationContext, App.NOTIFICATION_CHANNEL_ID)
+                .setSmallIcon(R.drawable.ic_notification)
+                .setContentTitle("Sights found.")
+                .setContentText("Found $numberOfSights sights near you.")
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .setAutoCancel(true)
+                .build()
         
-        val pendingIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
-            PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_IMMUTABLE)
-        else
-            PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
-        
-        val notification = NotificationCompat.Builder(applicationContext, App.NOTIFICATION_CHANNEL_ID)
-            .setSmallIcon(R.drawable.ic_notification)
-            .setContentTitle("My first notification")
-            .setContentText("Description of my first notification ${System.currentTimeMillis()}")
-            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-            .setContentIntent(pendingIntent)
-            .setAutoCancel(true)
-            .build()
-        
-        NotificationManagerCompat.from(this).notify(Random.nextInt(), notification)
+        NotificationManagerCompat.from(this).notify(NOTIFICATION_ID, notification)
     }
     
     /**
@@ -263,7 +265,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     }
     
     companion object {
-        private const val NOTIFICATION_ID = 1000
+        private const val NOTIFICATION_ID = 1
         private val REQUIRED_PERMISSIONS: Array<String> = arrayOf(
             Manifest.permission.ACCESS_FINE_LOCATION,
             Manifest.permission.ACCESS_COARSE_LOCATION
