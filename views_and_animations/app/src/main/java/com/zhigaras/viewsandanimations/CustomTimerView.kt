@@ -9,11 +9,14 @@ import android.graphics.Rect
 import android.icu.util.Calendar
 import android.icu.util.TimeZone
 import android.util.AttributeSet
+import android.util.Log
 import android.view.View
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewTreeViewModelStoreOwner
 import androidx.lifecycle.get
 import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.sin
@@ -93,11 +96,12 @@ class CustomTimerView @JvmOverloads constructor(
         val calendar = Calendar.getInstance()
         calendar.timeZone = TimeZone.GMT_ZONE
         calendar.timeInMillis = timeInMillis
-        val seconds: Float = calendar.get(Calendar.SECOND).toFloat()
+        val milliseconds = calendar.get(Calendar.MILLISECOND)
+        val seconds: Float = calendar.get(Calendar.SECOND).toFloat() + milliseconds.toFloat() / 1000
         val minutes: Float = calendar.get(Calendar.MINUTE).toFloat()
         var hours: Float = calendar.get(Calendar.HOUR) + minutes / 60
         if (hours > 12) hours -= 12
-        
+        Log.d("draw Hands", seconds.toString())
         val hands = listOf(ClockHands.SECOND, ClockHands.MINUTE, ClockHands.HOUR)
         val timeValues = listOf(seconds, minutes, hours)
         hands.zip(timeValues).forEach { (hand, timeValue) ->
