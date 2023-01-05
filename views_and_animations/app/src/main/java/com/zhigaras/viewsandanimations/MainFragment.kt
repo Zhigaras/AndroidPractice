@@ -1,17 +1,13 @@
 package com.zhigaras.viewsandanimations
 
+import android.icu.util.Calendar
+import android.icu.util.TimeZone
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.viewModels
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import com.zhigaras.viewsandanimations.databinding.FragmentMainBinding
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.launch
 
 class MainFragment : Fragment() {
     
@@ -24,6 +20,7 @@ class MainFragment : Fragment() {
     private var _binding: FragmentMainBinding? = null
     private val binding get() = _binding!!
     
+    
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -35,12 +32,14 @@ class MainFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         
-        setUpStartStopBtn()
-        setUpButtonsListeners()
+        setUpButtonsClickListeners()
+        
+        binding.customTimerView.addUpdateListener { updateDigitalCLock(it) }
+        binding.customTimerView.addUpdateListener { updateButtonState(it) }
         
     }
     
-    private fun setUpButtonsListeners() {
+    private fun setUpButtonsClickListeners() {
         binding.startStopButton.setOnClickListener {
             when (currentBtnState) {
                 is StartStopButtonState.Waiting -> binding.customTimerView.start()
@@ -53,25 +52,30 @@ class MainFragment : Fragment() {
         }
     }
     
-    private fun setUpStartStopBtn() {
-        viewLifecycleOwner.lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                binding.customTimerView.currentTime().collect { timerState ->
-                    currentBtnState = if (timerState.isRunning) {
-                        StartStopButtonState.Running()
-                    } else {
-                        StartStopButtonState.Waiting()
-                    }
-                    binding.startStopButton.text = currentBtnState.text
-                    binding.timerText.text = timerState.time.toString()
-                }
-            }
+    private fun updateDigitalCLock(timerState: TimerState) {
+        val calendar = Calendar.getInstance()
+        calendar.timeZone = TimeZone.GMT_ZONE
+        calendar.timeInMillis = timerState.time
+        val seconds = calendar.get(Calendar.SECOND)
+        val minutes = calendar.get(Calendar.MINUTE)
+        val hours = calendar.get(Calendar.HOUR)
+        val timeString = String.format("%02d:%02d:%02d", hours, minutes, seconds)
+        binding.timerText.text = timeString
+    }
+    
+    private fun updateButtonState(timerState: TimerState) {
+        currentBtnState = if (timerState.isRunning) {
+            StartStopButtonState.Running()
+        } else {
+            StartStopButtonState.Waiting()
         }
+        binding.startStopButton.text = currentBtnState.text
     }
     
     override fun onDestroyView() {
         super.onDestroyView()
+        binding.customTimerView.removeUpdateListener { updateDigitalCLock(it) }
+        binding.customTimerView.removeUpdateListener { updateButtonState(it) }
         _binding = null
     }
-    
 }

@@ -14,12 +14,9 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewTreeViewModelStoreOwner
 import androidx.lifecycle.get
 import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.StateFlow
 import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.sin
-import kotlin.properties.Delegates
 
 class CustomTimerView @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
@@ -31,27 +28,29 @@ class CustomTimerView @JvmOverloads constructor(
     private val paint = Paint()
     private val rect = Rect()
     private val scope = CoroutineScope(Dispatchers.Main.immediate)
+    private val listenersList = mutableListOf<(TimerState) -> Unit>()
     
     private val viewModel by lazy {
         ViewModelProvider(ViewTreeViewModelStoreOwner.get(this)!!).get<MainViewModel>()
     }
     
-    private lateinit var timerStateFlow: StateFlow<TimerState>
-    
     override fun onDraw(canvas: Canvas?) {
         super.onDraw(canvas)
+
         centerX = (height / 2).toFloat()
         centerY = (width / 2).toFloat()
         clockRadius = (minOf(height, width) * 0.4).toFloat()
         
-        drawCircle(canvas)
-        drawCenter(canvas)
-        drawNumbers(canvas)
-        drawHands(canvas, viewModel.timerFlow.value.time)
-        
-        postInvalidateDelayed(1_000)
-        invalidate()
-        
+        scope.launch {
+            viewModel.timerFlow.collect { timerState ->
+                listenersList.forEach { listener -> listener(timerState) }
+                invalidate()
+                drawCircle(canvas)
+                drawCenter(canvas)
+                drawNumbers(canvas)
+                drawHands(canvas, timerState.time)
+            }
+        }
     }
     
     fun start() {
@@ -63,19 +62,19 @@ class CustomTimerView @JvmOverloads constructor(
     }
     
     fun reset() {
-        viewModel.resetCounter()
+        viewModel.resetCount()
     }
     
-    fun currentTime(): StateFlow<TimerState> {
-        timerStateFlow = viewModel.timerFlow
-        return timerStateFlow
+    fun currentTime(): Long {
+        return viewModel.timerFlow.value.time
     }
     
-    fun addUpdateListener(listener:TimerState) {
-    
+    fun addUpdateListener(listener: (TimerState) -> Unit) {
+        listenersList.add(listener)
     }
-    fun removeUpdateListener(listener:TimerState) {
     
+    fun removeUpdateListener(listener: (TimerState) -> Unit) {
+        listenersList.remove(listener)
     }
     
     private fun drawHand(canvas: Canvas?, handType: ClockHands, timeValue: Float) {
@@ -135,8 +134,5 @@ class CustomTimerView @JvmOverloads constructor(
             style = Style.FILL_AND_STROKE
         }
         canvas?.drawCircle(centerX, centerY, 3F, paint)
-        
     }
-    
-    
 }
