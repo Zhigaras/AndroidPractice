@@ -2,6 +2,7 @@ plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
     id 'kotlin-kapt'
+    id 'dagger.hilt.android.plugin'
 }
 
 android {
@@ -69,4 +70,9 @@ dependencies {
 
     //Retrofit для взаимодействия с API
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+
+    //Hilt
+    def hilt_version = "2.44.2"
+    implementation "com.google.dagger:hilt-android:$hilt_version"
+    kapt "com.google.dagger:hilt-compiler:$hilt_version"
 }
