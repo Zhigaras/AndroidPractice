@@ -39,7 +39,7 @@ class PersonagesPagerAdapter : PagingDataAdapter<Personage, PersonageViewHolder>
             }
             statusCircle.setImageResource(statusImage)
             originDescription.text = item.origin.name
-            locationDescription.text = item.location.name
+//            locationDescription.text = item.location.name
             Glide.with(avatar.context)
                 .load(item.image)
                 .into(avatar)
