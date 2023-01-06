@@ -1,4 +1,4 @@
-package com.zhigaras.rickandmortypagination.presentation
+package com.zhigaras.recyclerviewadvanced.ui
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -7,12 +7,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import com.zhigaras.rickandmortypagination.databinding.FragmentMainBinding
-import dagger.hilt.android.AndroidEntryPoint
+import com.zhigaras.recyclerviewadvanced.databinding.FragmentMainBinding
+import com.zhigaras.recyclerviewadvanced.ui.recyclerview.PersonagesPagerAdapter
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
-@AndroidEntryPoint
 class MainFragment : Fragment() {
     
     companion object {
@@ -23,6 +22,10 @@ class MainFragment : Fragment() {
     private val binding get() = _binding!!
     
     private val viewModel: MainViewModel by viewModels()
+    
+    private val pagedPersonageAdapter = PersonagesPagerAdapter()
+    
+    
     
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -35,12 +38,17 @@ class MainFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         
-        binding.button.setOnClickListener {
-            viewModel.getCharacters()
-        }
+        binding.recyclerView.adapter = pagedPersonageAdapter
         
-        viewModel.charactersFlow.onEach {
-            binding.message.text = it.firstOrNull()?.name
+        viewModel.pagedPersonage.onEach {
+            pagedPersonageAdapter.submitData(it)
         }.launchIn(viewLifecycleOwner.lifecycleScope)
+        
     }
+    
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+    
 }

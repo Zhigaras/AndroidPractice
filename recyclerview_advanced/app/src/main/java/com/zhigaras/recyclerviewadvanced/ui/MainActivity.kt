@@ -1,11 +1,9 @@
-package com.zhigaras.rickandmortypagination.presentation
+package com.zhigaras.recyclerviewadvanced.ui
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import com.zhigaras.rickandmortypagination.R
-import dagger.hilt.android.AndroidEntryPoint
+import com.zhigaras.recyclerviewadvanced.R
 
-@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
     
     override fun onCreate(savedInstanceState: Bundle?) {

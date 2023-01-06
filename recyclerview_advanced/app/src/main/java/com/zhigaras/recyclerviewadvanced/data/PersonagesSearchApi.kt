@@ -1,6 +1,6 @@
-package com.zhigaras.rickandmortypagination.data
+package com.zhigaras.recyclerviewadvanced.data
 
-import com.zhigaras.rickandmortypagination.model.ReplyModel
+import com.zhigaras.recyclerviewadvanced.model.ApiReply
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Response
@@ -8,19 +8,18 @@ import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.Query
-import javax.inject.Inject
 
 private const val BASE_URL = "https://rickandmortyapi.com/api/"
 
-interface CharactersSearchApi {
+interface PersonagesSearchApi {
     
     @GET("character")
-    suspend fun findRoverPhotos(
+    suspend fun findPersonages(
         @Query("page") page: Int
-    ): Response<ReplyModel>
+    ): Response<ApiReply>
 }
 
-class CharactersApi @Inject constructor(){
+object PersonagesApi {
     private val retrofit = Retrofit
         .Builder()
         .client(
@@ -32,5 +31,5 @@ class CharactersApi @Inject constructor(){
         .addConverterFactory(MoshiConverterFactory.create())
         .build()
     
-    val charactersSearchApi: CharactersSearchApi = retrofit.create(CharactersSearchApi::class.java)
+    val personagesSearchApi: PersonagesSearchApi = retrofit.create(PersonagesSearchApi::class.java)
 }

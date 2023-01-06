@@ -1,4 +1,4 @@
-package com.zhigaras.rickandmortypagination
+package com.zhigaras.recyclerviewadvanced
 
 import org.junit.Test
 

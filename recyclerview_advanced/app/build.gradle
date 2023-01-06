@@ -2,15 +2,14 @@ plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
     id 'kotlin-kapt'
-    id 'dagger.hilt.android.plugin'
 }
 
 android {
-    namespace 'com.zhigaras.rickandmortypagination'
+    namespace 'com.zhigaras.recyclerviewadvanced'
     compileSdk 33
 
     defaultConfig {
-        applicationId "com.zhigaras.rickandmortypagination"
+        applicationId "com.zhigaras.recyclerviewadvanced"
         minSdk 24
         targetSdk 33
         versionCode 1
@@ -71,8 +70,11 @@ dependencies {
     //Retrofit для взаимодействия с API
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
 
-    //Hilt
-    def hilt_version = "2.44.2"
-    implementation "com.google.dagger:hilt-android:$hilt_version"
-    kapt "com.google.dagger:hilt-compiler:$hilt_version"
+//    //Hilt
+//    def hilt_version = "2.44.2"
+//    implementation "com.google.dagger:hilt-android:$hilt_version"
+//    kapt "com.google.dagger:hilt-compiler:$hilt_version"
+
+    //Glide
+    implementation 'com.github.bumptech.glide:glide:4.11.0'
 }

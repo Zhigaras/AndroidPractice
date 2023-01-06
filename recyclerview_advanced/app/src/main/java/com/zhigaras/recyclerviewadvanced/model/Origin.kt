@@ -1,4 +1,4 @@
-package com.zhigaras.rickandmortypagination.model
+package com.zhigaras.recyclerviewadvanced.model
 
 
 import com.squareup.moshi.Json
