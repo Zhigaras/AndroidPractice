@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Ric And Morty Composable</string>
+    <string name="status">Status</string>
+    <string name="species_gender">Species and gender</string>
+    <string name="last_location">Last known location</string>
+    <string name="first_seen">\"first seen in: \"</string>
+    <string name="origin">Origin</string>
+</resources>
