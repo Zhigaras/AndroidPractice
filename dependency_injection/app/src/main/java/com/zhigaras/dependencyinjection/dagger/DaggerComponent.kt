@@ -1,5 +1,6 @@
 package com.zhigaras.dependencyinjection.dagger
 
+import com.zhigaras.dependencyinjection.BicycleFactory
 import com.zhigaras.dependencyinjection.MainActivity
 import dagger.Component
 import javax.inject.Singleton
@@ -8,5 +9,5 @@ import javax.inject.Singleton
 @Singleton
 interface DaggerComponent {
     
-    fun inject(activity: MainActivity)
+    fun bicycleFactory() : BicycleFactory
 }

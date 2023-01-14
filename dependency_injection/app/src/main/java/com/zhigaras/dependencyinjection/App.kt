@@ -8,17 +8,18 @@ import org.koin.dsl.module
 
 class App : Application() {
     
-    val daggerComponent: DaggerComponent by lazy {
-        DaggerDaggerComponent.builder().build()
-    }
+    lateinit var daggerComponent: DaggerComponent
     
     override fun onCreate() {
         super.onCreate()
+        
+        daggerComponent = DaggerDaggerComponent.builder().build()
+        
         startKoin {
             modules(module {
                 single { FrameFactory() }
                 single { WheelsDealer() }
-                factory<BicycleFactory> { BicycleFactory(get(), get()) }
+                factory { BicycleFactory(get(), get()) }
             })
         }
     }
