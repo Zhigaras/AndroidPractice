@@ -40,7 +40,7 @@ class MainFragment : Fragment() {
     }
     
     private val lastLocationCallback = { it: Location? ->
-        if (it == null) {
+        if (it == null) {   //If returns null - asking user to turn GPS on
             Toast.makeText(
                 requireContext(),
                 getString(R.string.turn_on_gps_toast),

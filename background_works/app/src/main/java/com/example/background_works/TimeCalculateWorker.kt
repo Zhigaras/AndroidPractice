@@ -46,6 +46,7 @@ class TimeCalculateWorker(
         return Result.success(outputData)
     }
     
+    //Transform SunTime to millis
     fun transformToMillis(sunriseTime: String): Long {
         val splitTime = sunriseTime.substringAfter("T")
             .takeWhile { it != '+' }

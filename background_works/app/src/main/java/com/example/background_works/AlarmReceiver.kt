@@ -15,7 +15,7 @@ class AlarmReceiver : BroadcastReceiver() {
     private val notificationProvider = object : NotificationProvider {}
     override fun onReceive(context: Context, intent: Intent) {
         val notificationText = "WAKE UP!"
-        notificationProvider.createNotificationChannel(
+        notificationProvider.createNotificationChannel(   //Creating notification
             context,
             CHANNEL_ID,
             context.getString(R.string.alarm_channel_name),
@@ -26,7 +26,7 @@ class AlarmReceiver : BroadcastReceiver() {
         val pendingIntent =
             notificationProvider.getPendingIntent(context, AlarmActivity::class.java)
         notification.apply {
-            fullScreenIntent = pendingIntent
+            fullScreenIntent = pendingIntent    //Adding fullscreen pending intent to AlarmActivity
             category = NotificationCompat.CATEGORY_ALARM
             
         }
