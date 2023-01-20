@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">Background-Works</string>
+    <string name="sunrise_alarm">Sunrise Alarm</string>
+    <string name="choose_date">Choose date</string>
+    <string name="choose_time">Choose time</string>
+    <string name="set_alarm">Set alarm</string>
+    <string name="time_picker_title">Choose delay after sunrise</string>
+    <string name="date_picker_title">Choose date of alarm</string>
+    <string name="turn_on_gps_toast">Please, turn GPS on and try again</string>
+    <string name="notify_channel_name">alarm notify channel</string>
+    <string name="notify_channel_description">channel to notify user alarm is set up</string>
+    <string name="alarm_set_to">Alarm clock set to </string>
+    <string name="alarm_channel_name">alarm channel</string>
+    <string name="alarm_channel_description">channel to alarm notify</string>
+    <string name="stop_alarm">stop alarm</string>
+
+</resources>
