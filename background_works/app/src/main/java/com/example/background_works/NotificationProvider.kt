@@ -3,7 +3,6 @@ package com.example.background_works
 import android.app.*
 import android.content.Context
 import android.content.Intent
-import android.os.Build
 import androidx.core.app.NotificationCompat
 
 interface NotificationProvider {
@@ -26,7 +25,7 @@ interface NotificationProvider {
     fun getPendingIntent(context: Context, classz: Class<out Activity>): PendingIntent {
         val fullScreenIntent = Intent(context, classz)
         return PendingIntent.getActivity(
-            context, 0, fullScreenIntent, PendingIntent.FLAG_UPDATE_CURRENT
+            context, 0, fullScreenIntent, PendingIntent.FLAG_IMMUTABLE
         )
     }
     
@@ -36,13 +35,11 @@ interface NotificationProvider {
         channelName: String,
         channelDescription: String
     ) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val importance = NotificationManager.IMPORTANCE_HIGH
-            val channel = NotificationChannel(channelID, channelName, importance)
-            channel.description = channelDescription
-            val notificationManager = getNotificationManager(context)
-            notificationManager.createNotificationChannel(channel)
-        }
+        val importance = NotificationManager.IMPORTANCE_HIGH
+        val channel = NotificationChannel(channelID, channelName, importance)
+        channel.description = channelDescription
+        val notificationManager = getNotificationManager(context)
+        notificationManager.createNotificationChannel(channel)
     }
     
     fun getNotificationManager(context: Context): NotificationManager {

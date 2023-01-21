@@ -4,7 +4,6 @@ import android.app.AlarmManager
 import android.app.Application
 import android.app.PendingIntent
 import android.content.Intent
-import android.icu.text.SimpleDateFormat
 import android.location.Location
 import android.util.Log
 import androidx.core.content.ContextCompat.getSystemService
@@ -12,50 +11,35 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.asFlow
 import androidx.lifecycle.viewModelScope
 import androidx.work.*
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import java.time.*
+import java.time.format.DateTimeFormatter
 import java.util.*
 
 const val KEY_LAT = "keyLatitude"
 const val KEY_LON = "keyLongitude"
-const val KEY_CALENDAR = "keyCalendar"
+const val KEY_DATE = "keqDate"
+const val KEY_TIME = "keqTime"
 private const val CHANNEL_ID: String = "id_of_channel"
 
 class MainViewModel(private val app: Application) : AndroidViewModel(app) {
     
-    private var date = 0L
-    private var time = 0L
+    private var dateInMillis = 0L
+    private var delayInMillis = 0L
     
     private val notificationProvider = object : NotificationProvider {}
     private lateinit var timeCalculationRequest: OneTimeWorkRequest
     
-    private val calendar: Calendar = Calendar.getInstance()
-    
-    private val _calendarFlow = MutableStateFlow<Calendar?>(null)
-    val calendarFlow = _calendarFlow.asStateFlow()
-    
-    private fun shareCalendar() {
-        calendar.timeInMillis = date + time
-        viewModelScope.launch {
-            _calendarFlow.value = calendar
-        }
-        Log.d("AAA", calendar.time.toString())
-    }
-    
-    fun saveDate(timeInMillis: Long) {
-        date = timeInMillis
-        shareCalendar()
+    fun saveDate(dateInMillis: Long) {
+        this.dateInMillis = dateInMillis
     }
     
     fun saveTime(hour: Int, minute: Int) {
-        time = timeToMillis(hour, minute)
-        shareCalendar()
+        delayInMillis = timeToMillis(hour, minute)
     }
     
     private fun timeToMillis(hour: Int, minute: Int): Long {
-        val timeZoneOffset = calendar.timeZone.rawOffset
-        return (minute * 60_000 + hour * 3_600_000 - timeZoneOffset).toLong()
+        return (minute * 60_000 + hour * 3_600_000).toLong()
     }
     
     fun startCalculation(location: Location) {
@@ -78,7 +62,8 @@ class MainViewModel(private val app: Application) : AndroidViewModel(app) {
         return Data.Builder().apply {
             putDouble(KEY_LAT, location.latitude)
             putDouble(KEY_LON, location.longitude)
-            putLong(KEY_CALENDAR, calendar.timeInMillis)
+            putLong(KEY_DATE, dateInMillis)
+            putLong(KEY_TIME, delayInMillis)
         }.build()
     }
     
@@ -91,7 +76,7 @@ class MainViewModel(private val app: Application) : AndroidViewModel(app) {
                     if (workInfo != null && workInfo.state == WorkInfo.State.SUCCEEDED) {
                         val alarmTime = workInfo.outputData
                             .getLong(TimeCalculateWorker.WORK_OUTPUT_KEY, 0L)
-                            
+                        
                         val notificationText = buildString {
                             append(app.getString(R.string.alarm_set_to))
                             append(" ")
@@ -111,9 +96,14 @@ class MainViewModel(private val app: Application) : AndroidViewModel(app) {
     }
     
     private fun Long.convertToDateFormat(): String {
-        val calendar = Calendar.getInstance()
-        calendar.timeInMillis = this
-        return SimpleDateFormat("dd-MM-yyyy HH:mm", Locale.getDefault()).format(calendar.time)
+        val formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm", Locale.getDefault())
+        val instant = Instant.ofEpochSecond(this/1_000)
+        Log.d("AAA2", instant.toString())
+        val zid = ZoneId.systemDefault()
+        Log.d("AAA2", zid.toString())
+        return LocalDateTime.ofInstant(instant, zid).format(formatter)
+        
+        
     }
     
     private fun createBackgroundAlarm(alarmTime: Long) {
@@ -122,7 +112,12 @@ class MainViewModel(private val app: Application) : AndroidViewModel(app) {
         val alarmType = AlarmManager.RTC_WAKEUP
         val intent = Intent(app, AlarmReceiver::class.java)
             .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        val pendingIntent = PendingIntent.getBroadcast(app, 0, intent, 0)
+        val pendingIntent = PendingIntent.getBroadcast(
+            app,
+            0,
+            intent,
+            PendingIntent.FLAG_IMMUTABLE
+        )
         alarmManager.setExactAndAllowWhileIdle(
             alarmType,
             alarmTime,
@@ -130,7 +125,7 @@ class MainViewModel(private val app: Application) : AndroidViewModel(app) {
         )
     }
     
-//    private fun calculateTimeForLaunch(): Long {
-//        return System.currentTimeMillis() + 10 * 1_000L
-//    }
+    private fun calculateTimeForLaunch(): Long {
+        return System.currentTimeMillis() + 10 * 1_000L
+    }
 }

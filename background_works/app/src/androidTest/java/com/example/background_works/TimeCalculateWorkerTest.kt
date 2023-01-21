@@ -28,34 +28,6 @@ class TimeCalculateWorkerTest {
     }
     
     @Test
-    fun transformToMillis_returnLong1() {
-        val str = "dsfsdT23:34:23+lkldskdl"
-        val result = worker.transformToMillis(str)
-        assertThat(result).isAtLeast(0L)
-    }
-    
-    @Test
-    fun transformToMillis_returnLong2() {
-        val str = "a234fsT123:098:765+lkjlkh9632"
-        val result = worker.transformToMillis(str)
-        assertThat(result).isAtLeast(0L)
-    }
-    
-    @Test
-    fun transformToMillis_returnLong3() {
-        val str = "a234fsT0987:093248:76675+lkjlkh9632"
-        val result = worker.transformToMillis(str)
-        assertThat(result).isAtLeast(0L)
-    }
-    
-    @Test
-    fun transformToMillis_returnLong4() {
-        val str = "a234fsT234234:2342342:5867867+lkjlkh9632"
-        val result = worker.transformToMillis(str)
-        assertThat(result).isAtLeast(0L)
-    }
-    
-    @Test
     fun doWork_returnSuccess1() {
         worker = TestWorkerBuilder<TimeCalculateWorker>(
             context = context,
@@ -63,7 +35,8 @@ class TimeCalculateWorkerTest {
             inputData = workDataOf(
                 KEY_LAT to 90,
                 KEY_LAT to 90,
-                KEY_CALENDAR to 10000L
+                KEY_DATE to 100L,
+                KEY_TIME to 100L
             )
         ).build()
         assertThat(worker.doWork()).isInstanceOf(Result.success()::class.java)
@@ -77,7 +50,8 @@ class TimeCalculateWorkerTest {
             inputData = workDataOf(
                 KEY_LAT to 1,
                 KEY_LAT to 1,
-                KEY_CALENDAR to 10000000000L
+                KEY_DATE to 10000000L,
+                KEY_TIME to 10000000L
             )
         ).build()
         assertThat(worker.doWork()).isInstanceOf(Result.success()::class.java)
@@ -91,7 +65,8 @@ class TimeCalculateWorkerTest {
             inputData = workDataOf(
                 KEY_LAT to 40.234,
                 KEY_LAT to 30.234234,
-                KEY_CALENDAR to 10000000000L
+                KEY_DATE to 100000000000L,
+                KEY_TIME to 100000000000L
             )
         ).build()
         assertThat(worker.doWork()).isInstanceOf(Result.success()::class.java)

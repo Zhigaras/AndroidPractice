@@ -1,9 +1,10 @@
 package com.example.background_works
 
 import android.content.Context
+import android.util.Log
 import androidx.work.*
 import org.shredzone.commons.suncalc.SunTimes
-import java.util.*
+import java.time.LocalDate
 import java.util.concurrent.TimeUnit
 
 class TimeCalculateWorker(
@@ -30,38 +31,30 @@ class TimeCalculateWorker(
         }
     }
     
-    private val calendar = Calendar.getInstance()
+    private var dateInMillis = 0L
+    private var delayTimeInMillis = 0L
     
     override fun doWork(): Result {
         val latitude = inputData.getDouble(KEY_LAT, 0.0)
         val longitude = inputData.getDouble(KEY_LON, 0.0)
-        calendar.timeInMillis = inputData.getLong(KEY_CALENDAR, 0L)
+        dateInMillis = inputData.getLong(KEY_DATE, 0L)
+        delayTimeInMillis = inputData.getLong(KEY_TIME, 0L)
         
         val riseTime = calculateSunriseTime(latitude, longitude).rise
-            .toString()
-        val delayInMillis = transformToMillis(riseTime)
-        val alarmTime = calendar.timeInMillis + delayInMillis
+        Log.d("AAA2", "rise = $riseTime")
+        val riseTimeInMillis = riseTime?.toEpochSecond()?.times(1_000)
+        Log.d("AAA2", "riseInMillis = $riseTimeInMillis")
+        Log.d("AAA2", "delayInMillis = $delayTimeInMillis")
+        val alarmTime = riseTimeInMillis?.plus(delayTimeInMillis)
+        Log.d("AAA2", "alarm = $alarmTime")
         val outputData = workDataOf(WORK_OUTPUT_KEY to alarmTime)
         
         return Result.success(outputData)
     }
     
-    //Transform SunTime to millis
-    fun transformToMillis(sunriseTime: String): Long {
-        val splitTime = sunriseTime.substringAfter("T")
-            .takeWhile { it != '+' }
-            .split(":")
-            .map { it.toInt() }
-        return (splitTime[2] * 1_000 + splitTime[1] * 60_000 + splitTime[0] * 3_600_000).toLong()
-    }
-    
     private fun calculateSunriseTime(latitude: Double, longitude: Double): SunTimes =
-        SunTimes.compute()
-            .on(
-                calendar.get(Calendar.YEAR),
-                calendar.get(Calendar.MONTH) + 1,
-                calendar.get(Calendar.DAY_OF_MONTH)
-            )
+         SunTimes.compute()
+            .on(LocalDate.ofEpochDay(dateInMillis / 86_400_000))
             .at(latitude, longitude)
             .execute()
 }

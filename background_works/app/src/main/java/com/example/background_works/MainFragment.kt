@@ -9,19 +9,14 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import com.example.background_works.databinding.FragmentMainBinding
 import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.DateValidatorPointForward
 import com.google.android.material.datepicker.MaterialDatePicker
-import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
-import kotlinx.coroutines.launch
-import java.text.SimpleDateFormat
-import java.util.*
+import java.time.LocalDate
+import java.time.LocalTime
 
 class MainFragment : Fragment() {
     
@@ -112,7 +107,7 @@ class MainFragment : Fragment() {
                 .build().apply {
                     addOnPositiveButtonClickListener {
                         viewModel.saveDate(it)
-                        addDateFieldListener()
+                        binding.date.setText(LocalDate.ofEpochDay(it/86_400_000).toString())
                         setAlarmButtonAvailability()
                     }
                 }
@@ -128,33 +123,11 @@ class MainFragment : Fragment() {
                 .build().apply {
                     addOnPositiveButtonClickListener {
                         viewModel.saveTime(this.hour, this.minute)
-                        addTimeFieldListener()
+                        binding.time.setText(LocalTime.of(this.hour, this.minute).toString())
                         setAlarmButtonAvailability()
                     }
                 }
             timePicker.show(childFragmentManager, "TimePicker")
-        }
-    }
-    
-    private fun addDateFieldListener() {
-        val dateFormat = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault())
-        binding.date.addFieldListener(dateFormat)
-    }
-    
-    private fun addTimeFieldListener() {
-        val timeFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
-        binding.time.addFieldListener(timeFormat)
-    }
-    
-    private fun TextInputEditText.addFieldListener(pattern: SimpleDateFormat) {
-        viewLifecycleOwner.lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.calendarFlow.collect { calendar ->
-                    this@addFieldListener.setText(calendar?.time?.let { it ->
-                        pattern.format(it)
-                    })
-                }
-            }
         }
     }
     
