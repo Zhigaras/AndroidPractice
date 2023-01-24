@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Weather App</string>
+    <string name="search_text">Search</string>
+    <string name="search_history">Search history</string>
+    <string name="clear">clear</string>
+    <string name="delete_request">Delete request</string>
+</resources>
