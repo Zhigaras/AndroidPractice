@@ -81,7 +81,7 @@ fun WeatherApplication() {
 fun SetUpNavHost(
     navController: NavHostController,
     modifier: Modifier = Modifier
-    ) {
+) {
     NavHost(
         navController = navController,
         startDestination = Search.route,
@@ -97,9 +97,9 @@ fun SetUpNavHost(
         composable(
             route = Details.routeWithArgs,
             arguments = Details.arguments
-        ) {navBackStackEntry ->
+        ) { navBackStackEntry ->
             val cityName = navBackStackEntry.arguments?.getString(Details.cityName)
-            DetailsScreen(cityName!!)
+            DetailsScreen(cityName!!) { navController.popBackStack() }
         }
         composable(route = Saved.route) {
             SavedScreen(

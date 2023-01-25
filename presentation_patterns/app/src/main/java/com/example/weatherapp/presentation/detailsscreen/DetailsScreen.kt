@@ -6,6 +6,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -20,18 +21,26 @@ import com.example.weatherapp.presentation.compose.LoadingView
 
 @Composable
 fun DetailsScreen(
-    cityName: String, viewModel: DetailsViewModel = hiltViewModel()
+    cityName: String,
+    viewModel: DetailsViewModel = hiltViewModel(),
+    onButtonClick: () -> Unit
 ) {
-    viewModel.getWeather(cityName)
+    LaunchedEffect(key1 = Unit) {
+        viewModel.getWeather(cityName)
+    }
     val weather = viewModel.detailsFlow.collectAsState().value
     
     Log.d("ZZZ", "Details - ${viewModel.hashCode()}")
     
     when (weather) {
         is ApiResult.Error -> {
-            ErrorItem(message = weather.exception,
+            ErrorItem(message = weather.errorInfo?.message.toString(),
                 modifier = Modifier.fillMaxSize(),
-                onClickRetry = { viewModel.getWeather(cityName) })
+                buttonText = weather.errorInfo?.errorButtonText,
+                onButtonClick = {
+                    if (weather.errorInfo!!.needToGoBack) onButtonClick()
+                    else viewModel.getWeather(cityName)
+                })
         }
         is ApiResult.Loading -> {
             LoadingView(modifier = Modifier.fillMaxSize())

@@ -26,9 +26,10 @@ fun LoadingView(
 
 @Composable
 fun ErrorItem(
-    message: String,
     modifier: Modifier = Modifier,
-    onClickRetry: () -> Unit
+    message: String,
+    buttonText: String? = null,
+    onButtonClick: () -> Unit
 ) {
     Row(
         modifier = modifier.padding(16.dp),
@@ -41,8 +42,8 @@ fun ErrorItem(
             style = MaterialTheme.typography.titleMedium,
             color = Color.Red
         )
-        OutlinedButton(onClick = onClickRetry) {
-            Text(text = "Try again")
+        OutlinedButton(onClick = onButtonClick) {
+            Text(text = buttonText ?: "Try again")
         }
     }
 }

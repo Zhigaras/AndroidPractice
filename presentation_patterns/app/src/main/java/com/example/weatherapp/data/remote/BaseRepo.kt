@@ -18,13 +18,15 @@ abstract class BaseRepo {
                 if (response.isSuccessful) {
                     ApiResult.Success(_data = response.body()?.toWeatherItem())
                 } else {
-                    ApiResult.Error(
-                        exception = if (response.code() == 400) {
-                            "No location found matching. Go back and try again."
-                        } else {
-                            "Something went wrong"
-                        }
-                    )
+                    if (response.code() == 400) {
+                        ApiResult.Error(
+                            exception = "No location found matching. Go back and try again.",
+                            _needToGoBack = true,
+                            _errorButtonText = "Back"
+                        )
+                    } else {
+                        ApiResult.Error(exception = response.message())
+                    }
                 }
             } catch (e: HttpException) {
                 ApiResult.Error(exception = e.message ?: "Something went wrong")
